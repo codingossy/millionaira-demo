@@ -24,7 +24,7 @@ const Start = () => {
         email,
         password
       ).then((user) => {
-        console.log('User:::', user)
+       
         dispatch(
           login({
             email: user.user.email,
