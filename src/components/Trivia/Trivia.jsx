@@ -50,15 +50,16 @@ const Trivia = ({
   
       // filter out all the wrong answers
      const wrongAnswers = answers.filter(answer=> !answer.correct);
-     console.log(wrongAnswers)
+    
+
      // generate random number to match index of all wrongAnswers
      const randomNumber = Math.floor(Math.random() * wrongAnswers.length);
-     console.log(randomNumber)
+     
 
      // find the selected wrongAnswer with the gen. random number
      const selectedWrongAnswer = wrongAnswers[randomNumber];
 
-     console.log(selectedWrongAnswer)
+
 
 
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
@@ -73,7 +74,6 @@ const Trivia = ({
             correct: false,
           }
         }
-        // return answer
       })
       setUsedLifelines({
         ...usedLifeLines,
