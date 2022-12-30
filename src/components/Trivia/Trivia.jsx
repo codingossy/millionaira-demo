@@ -4,12 +4,19 @@ import play from "../../assets/sounds/play.mp3";
 import correct from "../../assets/sounds/correct.mp3";
 import wrong from "../../assets/sounds/wrong.mp3";
 
+const initial_lifelines = {
+  fiftyFifty: false,
+  phoneAFriend: false,
+  askAudience: false,
+}
+
 const Trivia = ({
   data,
   questionNumber,
   setTimerRunning,
   setQuestionNumber,
-  setTimeOut
+  setTimeOut,
+  lifeline
 }) => {
   // const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -19,6 +26,7 @@ const Trivia = ({
   const [wrongAnswer] = useSound(wrong);
   const [activeButtons, setActiveButtons] = useState(true)
   const [Data, setData] = useState(data)
+  const [usedLifeLines, setUsedLifelines] = useState(initial_lifelines)
 
   const Question = useMemo(()=>{
     // To shuffle the questions we generate a random number 
@@ -37,9 +45,44 @@ const Trivia = ({
   },[questionNumber])
 
   const Answers = useMemo(()=>{
-    console.log('Question::', Question)
-    return Question?.answers.sort(() => Math.random() - 0.5);
-  },[Question])
+    const answers = Question?.answers.sort(() => Math.random() - 0.5);
+    if(lifeline.fiftyFifty && !usedLifeLines.fiftyFifty){
+  
+      // filter out all the wrong answers
+     const wrongAnswers = answers.filter(answer=> !answer.correct);
+     console.log(wrongAnswers)
+     // generate random number to match index of all wrongAnswers
+     const randomNumber = Math.floor(Math.random() * wrongAnswers.length);
+     console.log(randomNumber)
+
+     // find the selected wrongAnswer with the gen. random number
+     const selectedWrongAnswer = wrongAnswers[randomNumber];
+
+     console.log(selectedWrongAnswer)
+
+
+     const lifeline_5050_answers = answers.map((answer, index, arr)=>{
+      // if answer is correct or answer matches the 
+      // random number selected wrong answer, return that answer
+      // otherwise, return answer with empty text
+        if(answer.correct || (answer.text == selectedWrongAnswer.text)){
+          return answer
+        }else{
+          return {
+            text: ' ',
+            correct: false,
+          }
+        }
+        // return answer
+      })
+      setUsedLifelines({
+        ...usedLifeLines,
+        fiftyFifty : true
+      })
+      return lifeline_5050_answers
+    }
+    return answers
+  },[Question, lifeline])
 
   // to run the play
   useEffect(() => {

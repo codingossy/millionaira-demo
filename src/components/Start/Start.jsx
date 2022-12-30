@@ -24,6 +24,7 @@ const Start = () => {
         email,
         password
       ).then((user) => {
+        console.log('User:::', user)
         dispatch(
           login({
             email: user.user.email,
@@ -93,7 +94,7 @@ const Start = () => {
           <div className="my-3 w-full text-center">
             <button
               className="w-full rounded-2xl bg-blue-600 p-1 uppercase text-white transition-all duration-300 ease-in-out hover:bg-blue-400"
-              // No nned for onclick here as it prevents form validation
+              // No need for onclick here as it prevents form validation
               // onClick={loginAuth}
               type="submit"
             >
