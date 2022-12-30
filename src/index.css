@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200;300;400;500;600;700;800&display=swap');
+
+
+@tailwind base;
+
+@layer base {
+    .answer {
+        @apply border border-white p-2 px-10 rounded-md cursor-pointer text-center w-full bg-[#020230]
+    }
+}
+
+@tailwind components;
+@tailwind utilities;
+
+body{
+    font-family:  'Poppins', sans-serif;
+    overflow-x: hidden;
+    font-family: 'Oxanium', sans-serif;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  body::-webkit-scrollbar{
+    display: none;
+  }
+
+body {
+    background: #020230;
+}
+
+.main {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #020230),
+        url("./assets//images/bg.jpg") center;
+}
+
+.money.active {
+    background-color: teal;
+}
+.bg-who{
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./assets/images/1672386690099.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+
+
+
+
+
+
+.answer:hover,
+.answer.active {
+    background: mediumblue;
+    width: 100%;
+    border: 2px;
+    transition: 0.5s ease-in-out;
+}
+
+.answer.correct {
+    animation: correct 3s ease forwards;
+}
+
+
+@keyframes correct {
+
+    0%,
+    22%,
+    42% {
+        background: mediumblue;
+        border: 3px;
+    }
+
+    20%,
+    40%,
+    60% {
+        background: linear-gradient(#0e0124, #22074d);
+    }
+
+    62%,
+    100% {
+        background: green;
+    }
+}
+
+.answer.wrong {
+    animation: wrong 3s ease forwards;
+}
+
+@keyframes wrong {
+
+    0%,
+    22%,
+    42% {
+        background: mediumblue;
+    }
+
+    20%,
+    40%,
+    60% {
+        background: linear-gradient(#0e0124, #22074d);
+    }
+
+    62%,
+    100% {
+        background: crimson;
+    }
+}
