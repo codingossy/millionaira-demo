@@ -76,6 +76,7 @@ const Start = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <label htmlFor="" className="mb-1">
@@ -86,12 +87,14 @@ const Start = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
           <div className="my-3 w-full text-center">
             <button
               className="w-full rounded-2xl bg-blue-600 p-1 uppercase text-white transition-all duration-300 ease-in-out hover:bg-blue-400"
-              onClick={loginAuth}
+              // No nned for onclick here as it prevents form validation
+              // onClick={loginAuth}
               type="submit"
             >
               sign in
