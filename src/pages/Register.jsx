@@ -62,6 +62,7 @@ const Register = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
@@ -72,6 +73,7 @@ const Register = () => {
                 type="password"
                 id="password"
                 value={password}
+                required
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -79,7 +81,7 @@ const Register = () => {
             <div className="my-3 w-full text-center">
               <button
                 className="w-full rounded-2xl bg-blue-600 p-1 uppercase text-white transition-all duration-300 ease-in-out hover:bg-blue-400"
-                onClick={signupAuth}
+                // onClick={signupAuth}
                 type="submit"
               >
                 create account
