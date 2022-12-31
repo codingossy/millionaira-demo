@@ -37,7 +37,7 @@ const Trivia = ({
   },[questionNumber])
 
   const Answers = useMemo(()=>{
-    console.log('Question::', Question)
+    // console.log('Question::', Question)
     return Question?.answers.sort(() => Math.random() - 0.5);
   },[Question])
 
