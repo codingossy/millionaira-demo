@@ -59,9 +59,6 @@ const Trivia = ({
      // find the selected wrongAnswer with the gen. random number
      const selectedWrongAnswer = wrongAnswers[randomNumber];
 
-
-
-
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
       // if answer is correct or answer matches the 
       // random number selected wrong answer, return that answer
