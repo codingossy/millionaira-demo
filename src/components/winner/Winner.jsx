@@ -5,7 +5,7 @@ import img1 from "../../assets/images/animated-balloon-image-0002.gif";
 const Winner = ({ username, earned, restartGame }) => {
   return (
     <div className="w-full h-full relative">
-      <div className="container mx-auto flex flex-col items-center justify-center text-white my-20">
+      <div className="container mx-auto flex flex-col items-center text-center justify-center text-white my-20">
         <h1 className="my-5">congratulations {username}</h1>
         <p className="text-2xl capitalize">
           you just won yourself{" "}
