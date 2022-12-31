@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+// components
 import Timer from "../Timer/Timer";
 import Trivia from "../Trivia/Trivia";
 import { Questionnaire } from "../../data/QuestionsData";
@@ -6,13 +7,13 @@ import Winner from "../winner/Winner";
 import Start from "../Start/Start";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+// firebase
 import { db } from "../../firestore/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { selectUser } from "../../store/userSlice";
-
 import userAuth from "../../userAuth/userAuth";
-import {logout} from "../../store/userSlice";
+import { logout } from "../../store/userSlice";
+// images for 5050
 import Classic5050 from "../../assets/images/Classic5050.jpg";
 import Classic5050used from "../../assets/images/Classic5050used.jpg";
 
@@ -20,7 +21,7 @@ const initial_lifelines = {
   fiftyFifty: false,
   phoneAFriend: false,
   askAudience: false,
-}
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -28,11 +29,11 @@ const Home = () => {
 
   let userId = user.uid;
 
-
   // to set the user
   const [username, setUsername] = useState(null);
-  const [usernames, setUsernames] = useState();
 
+  // to handle username from firebase auth
+  const [usernames, setUsernames] = useState();
 
   //   time out count bewtween answers
   const [timeOut, setTimeOut] = useState(false);
@@ -45,36 +46,38 @@ const Home = () => {
   // for the countdown
   const [timerRunning, setTimerRunning] = useState(true);
 
-  const [lifeline, setLifeline] = useState(initial_lifelines)
+  // life line state
+  const [lifeline, setLifeline] = useState(initial_lifelines);
+
+  // getting the username
 
   useEffect(() => {
     const fetchItems = async () => {
       const docRef = doc(db, "users", userId);
 
       const docSnap = await getDoc(docRef);
-              
-        if (docSnap.exists()) {
-          setUsernames(docSnap.data().username);
-          }
 
-        }
+      if (docSnap.exists()) {
+        setUsernames(docSnap.data().username);
+      }
+    };
     fetchItems();
-    }, []);
+  }, []);
 
   const playAgain = () => {
     setQuestionNumber(1);
     setTimeOut(false);
     setEarned("₦ 0");
     setTimerRunning(true);
-    setLifeline(initial_lifelines)
+    setLifeline(initial_lifelines);
     // navigate('/')
   };
 
   const quitGame = () => {
     setTimerRunning(false);
     setTimeOut(true);
-    setLifeline(initial_lifelines)
-    logout()
+    setLifeline(initial_lifelines);
+    logout();
     navigate("/login");
   };
 
@@ -83,23 +86,22 @@ const Home = () => {
     setUsername(null);
     setQuestionNumber(1);
     setEarned("₦ 0");
-    setLifeline(initial_lifelines)
-    logout()
+    setLifeline(initial_lifelines);
+    logout();
     navigate("/");
   };
 
   //handle 50-50 lifeline
-  const handle5050 = () =>{
-    if(!lifeline.fiftyFifty){
+  const handle5050 = () => {
+    if (!lifeline.fiftyFifty) {
       setLifeline({
         ...lifeline,
-        fiftyFifty: true
-      })
-    }else{
-      return null
+        fiftyFifty: true,
+      });
+    } else {
+      return null;
     }
-
-  }
+  };
 
   //   monney array
   const moneyPyramid = useMemo(
@@ -132,14 +134,14 @@ const Home = () => {
       setEarned(moneyPyramid.find((m) => m.id === questionNumber - 1).amount);
   }, [moneyPyramid, questionNumber]);
 
-
-  
   // to handle profile
   const { currentUser } = userAuth();
 
-  useEffect(()=>{
-    setUsername(currentUser.email)
-  },[currentUser])
+  useEffect(() => {
+    setUsername(currentUser.email);
+  }, [currentUser]);
+
+
 
 
   return (
@@ -153,6 +155,8 @@ const Home = () => {
           {/* if user wins the game */}
           {questionNumber > 15 ? (
             <Winner
+              setUsernames={setUsernames}
+              usernames={usernames}
               username={username}
               earned={earned}
               restartGame={playAgain}
@@ -167,8 +171,8 @@ const Home = () => {
                       {/* hello, <span className="text-white font-semibold">{currentUser.email}</span> */}
                     </p>
 
-                    <h1 className="text-center font-semibold text-2xl">
-                      Congratulations {usernames},<br /> You won {earned}
+                    <h1 className="text-center font-semibold text-xl md:text-2xl">
+                      Congratulations {usernames}, <br /> You won {earned}
                     </h1>
 
                     <div className="my-10">
@@ -226,11 +230,24 @@ const Home = () => {
 
               {/* second */}
               <div className="flex-initial w-24 md:w-72 flex items-center justify-center bg-[#020230]">
-             
                 <ul className="w-full p-1 md:p-3">
-                <button className="lifeline my-10" onClick={handle5050} disabled={timeOut}>
-                  <img src={!lifeline.fiftyFifty ? Classic5050: Classic5050used} alt="50 50 lifeline" className="w-16" />
-                </button>
+                  {/* image change when 5050 option is selected from option to disabled */}
+                  {/* when clicked set the classic5050 to visible and make click disabled */}
+                  <div className="flex items-center justify-center">
+                    <button
+                      className="lifeline my-10"
+                      onClick={handle5050}
+                      disabled={timeOut}
+                    >
+                      <img
+                        src={
+                          !lifeline.fiftyFifty ? Classic5050 : Classic5050used
+                        }
+                        alt="50 50 lifeline"
+                        className="w-16"
+                      />
+                    </button>
+                  </div>
                   {moneyPyramid.map((moni, i) => (
                     <li
                       className={
@@ -240,8 +257,12 @@ const Home = () => {
                       }
                       key={i}
                     >
-                      <span className="w-32 font-semibold text-xs md:text-sm ">{moni.id}</span>
-                      <span className="text-[12px] md:text-sm">{moni.amount}</span>
+                      <span className="w-32 font-semibold text-xs md:text-sm ">
+                        {moni.id}
+                      </span>
+                      <span className="text-[12px] md:text-sm">
+                        {moni.amount}
+                      </span>
                     </li>
                   ))}
                 </ul>
