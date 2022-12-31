@@ -5,6 +5,12 @@ import { Questionnaire } from "../../data/QuestionsData";
 import Winner from "../winner/Winner";
 import Start from "../Start/Start";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { db } from "../../firestore/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { selectUser } from "../../store/userSlice";
+
 import userAuth from "../../userAuth/userAuth";
 import {logout} from "../../store/userSlice";
 import Classic5050 from "../../assets/images/Classic5050.jpg";
@@ -18,8 +24,16 @@ const initial_lifelines = {
 
 const Home = () => {
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
+
+  let userId = user.uid;
+
+
   // to set the user
   const [username, setUsername] = useState(null);
+  const [usernames, setUsernames] = useState();
+
+
   //   time out count bewtween answers
   const [timeOut, setTimeOut] = useState(false);
 
@@ -32,6 +46,20 @@ const Home = () => {
   const [timerRunning, setTimerRunning] = useState(true);
 
   const [lifeline, setLifeline] = useState(initial_lifelines)
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const docRef = doc(db, "users", userId);
+
+      const docSnap = await getDoc(docRef);
+              
+        if (docSnap.exists()) {
+          setUsernames(docSnap.data().username);
+          }
+
+        }
+    fetchItems();
+    }, []);
 
   const playAgain = () => {
     setQuestionNumber(1);
@@ -140,7 +168,7 @@ const Home = () => {
                     </p>
 
                     <h1 className="text-center font-semibold text-2xl">
-                      Congratulations, You won {earned}
+                      Congratulations {usernames},<br /> You won {earned}
                     </h1>
 
                     <div className="my-10">

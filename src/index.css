@@ -13,6 +13,10 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+    padding:0;
+    margin:0;
+}
 body{
     font-family:  'Poppins', sans-serif;
     overflow-x: hidden;
@@ -37,7 +41,7 @@ body {
     background-color: teal;
 }
 .bg-who{
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./assets/images/1672386690099.jpg');
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./assets/images/logo.png');
     background-position: center;
     background-size: cover;
 }

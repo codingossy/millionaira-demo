@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import logo from "../../assets/images/1672386690099.jpg";
+import logo from "../../assets/images/logo.png";
 
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,6 +8,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firestore/firebaseConfig";
 import { login } from "../../store/userSlice";
+
+import { toast } from 'react-toastify'
+
 
 const Start = () => {
   const [email, setEmail] = useState("");
