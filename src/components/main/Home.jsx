@@ -12,6 +12,15 @@ import { doc, getDoc } from "firebase/firestore";
 import { selectUser } from "../../store/userSlice";
 
 import userAuth from "../../userAuth/userAuth";
+import {logout} from "../../store/userSlice";
+import Classic5050 from "../../assets/images/Classic5050.jpg";
+import Classic5050used from "../../assets/images/Classic5050used.jpg";
+
+const initial_lifelines = {
+  fiftyFifty: false,
+  phoneAFriend: false,
+  askAudience: false,
+}
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,6 +45,8 @@ const Home = () => {
   // for the countdown
   const [timerRunning, setTimerRunning] = useState(true);
 
+  const [lifeline, setLifeline] = useState(initial_lifelines)
+
   useEffect(() => {
     const fetchItems = async () => {
       const docRef = doc(db, "users", userId);
@@ -55,12 +66,15 @@ const Home = () => {
     setTimeOut(false);
     setEarned("₦ 0");
     setTimerRunning(true);
+    setLifeline(initial_lifelines)
     // navigate('/')
   };
 
   const quitGame = () => {
     setTimerRunning(false);
     setTimeOut(true);
+    setLifeline(initial_lifelines)
+    logout()
     navigate("/login");
   };
 
@@ -69,8 +83,23 @@ const Home = () => {
     setUsername(null);
     setQuestionNumber(1);
     setEarned("₦ 0");
-    navigate("/login");
+    setLifeline(initial_lifelines)
+    logout()
+    navigate("/");
   };
+
+  //handle 50-50 lifeline
+  const handle5050 = () =>{
+    if(!lifeline.fiftyFifty){
+      setLifeline({
+        ...lifeline,
+        fiftyFifty: true
+      })
+    }else{
+      return null
+    }
+
+  }
 
   //   monney array
   const moneyPyramid = useMemo(
@@ -108,12 +137,16 @@ const Home = () => {
   // to handle profile
   const { currentUser } = userAuth();
 
+  useEffect(()=>{
+    setUsername(currentUser.email)
+  },[currentUser])
+
 
   return (
     <section className="w-full flex h-screen text-white">
       {/* start game if user is logged in */}
 
-      {username ? (
+      {!username ? (
         <Start setUsername={setUsername} />
       ) : (
         <>
@@ -184,6 +217,7 @@ const Home = () => {
                         setQuestionNumber={setQuestionNumber}
                         setTimeOut={setTimeOut}
                         setTimerRunning={setTimerRunning}
+                        lifeline={lifeline}
                       />
                     </div>
                   </>
@@ -192,7 +226,11 @@ const Home = () => {
 
               {/* second */}
               <div className="flex-initial w-24 md:w-72 flex items-center justify-center bg-[#020230]">
+             
                 <ul className="w-full p-1 md:p-3">
+                <button className="lifeline my-10" onClick={handle5050} disabled={timeOut}>
+                  <img src={!lifeline.fiftyFifty ? Classic5050: Classic5050used} alt="50 50 lifeline" className="w-16" />
+                </button>
                   {moneyPyramid.map((moni, i) => (
                     <li
                       className={

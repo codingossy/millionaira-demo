@@ -5,6 +5,7 @@
 
 @layer base {
     .answer {
+        min-height: 40px;
         @apply border border-white p-2 px-10 rounded-md cursor-pointer text-center w-full bg-[#020230]
     }
 }
@@ -61,6 +62,34 @@ body {
 
 .answer.correct {
     animation: correct 3s ease forwards;
+}
+
+.lifeline:focus{
+transform: scale(0.9);
+}
+
+
+.lifeline:not(:focus),
+.lifeline:not(:hover){
+transform: scale(1); 
+}
+
+.lifeline:disabled:focus,
+.lifeline:disabled:not(:focus),
+.lifeline:disabled:hover,
+.lifeline[disabled]:not(:focus),
+.lifeline[disabled]:hover{
+transform: none; 
+}
+
+.answer:disabled,
+.answer[disabled],
+.answer:disabled:hover,
+.answer[disabled]:hover{
+    @apply border border-white p-2 px-10 rounded-md cursor-pointer text-center w-full bg-[#020230];
+    /* border: 2px; */
+    transition: none;
+
 }
 
 

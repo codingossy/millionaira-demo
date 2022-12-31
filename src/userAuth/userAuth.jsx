@@ -9,15 +9,14 @@ const userAuth = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
+      // console.log("authuser", user)
       if (user) {
         setCurrentUser(user);
       } else {
         setCurrentUser(null);
       }
     });
-  });
-
-  
+  },[onAuthStateChanged]);
 
   return {
     currentUser,
