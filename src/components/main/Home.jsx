@@ -12,10 +12,18 @@ import { db } from "../../firestore/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { selectUser } from "../../store/userSlice";
 import userAuth from "../../userAuth/userAuth";
-import { logout } from "../../store/userSlice";
-// images for 5050
-import Classic5050 from "../../assets/images/Classic5050.jpg";
-import Classic5050used from "../../assets/images/Classic5050used.jpg";
+import {logout} from "../../store/userSlice";
+// images for lifeline
+
+import {
+    phone,
+    fifty,
+    usedPhone,
+    usedFifty,
+    ATA,
+    usedATA
+} from "../../assets/index"
+
 
 const initial_lifelines = {
   fiftyFifty: false,
@@ -25,9 +33,6 @@ const initial_lifelines = {
 
 const Home = () => {
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
-
-  let userId = user.uid;
 
   // to set the user
   const [username, setUsername] = useState(null);
@@ -46,23 +51,26 @@ const Home = () => {
   // for the countdown
   const [timerRunning, setTimerRunning] = useState(true);
 
-  // life line state
-  const [lifeline, setLifeline] = useState(initial_lifelines);
+  const [lifeline, setLifeline] = useState(initial_lifelines)
 
-  // getting the username
+    //fetching the user details
+    const { currentUser } = userAuth();
+    let userId = currentUser.uid;
+
 
   useEffect(() => {
     const fetchItems = async () => {
       const docRef = doc(db, "users", userId);
 
       const docSnap = await getDoc(docRef);
+              
+        if (docSnap.exists()) {
+          setUsernames(docSnap.data().username);
+          }
 
-      if (docSnap.exists()) {
-        setUsernames(docSnap.data().username);
-      }
-    };
+        };
     fetchItems();
-  }, []);
+    }, [userId]);
 
   const playAgain = () => {
     setQuestionNumber(1);
@@ -101,7 +109,30 @@ const Home = () => {
     } else {
       return null;
     }
-  };
+
+  }
+  const handlePhone = () =>{
+    if(!lifeline.phoneAFriend){
+      setLifeline({
+        ...lifeline,
+        phoneAFriend: true
+      })
+    }else{
+      return null
+    }
+
+  }
+  const handleATA = () =>{
+    if(!lifeline.askAudience){
+      setLifeline({
+        ...lifeline,
+        askAudience: true
+      })
+    }else{
+      return null
+    }
+
+  }
 
   //   monney array
   const moneyPyramid = useMemo(
@@ -134,8 +165,10 @@ const Home = () => {
       setEarned(moneyPyramid.find((m) => m.id === questionNumber - 1).amount);
   }, [moneyPyramid, questionNumber]);
 
-  // to handle profile
-  const { currentUser } = userAuth();
+
+  
+  // // to handle profile
+  // const { currentUser } = userAuth();
 
   useEffect(() => {
     setUsername(currentUser.email);
@@ -229,25 +262,27 @@ const Home = () => {
               </div>
 
               {/* second */}
-              <div className="flex-initial w-24 md:w-72 flex items-center justify-center bg-[#020230]">
-                <ul className="w-full p-1 md:p-3">
-                  {/* image change when 5050 option is selected from option to disabled */}
-                  {/* when clicked set the classic5050 to visible and make click disabled */}
-                  <div className="flex items-center justify-center">
-                    <button
-                      className="lifeline my-10"
-                      onClick={handle5050}
-                      disabled={timeOut}
-                    >
-                      <img
-                        src={
-                          !lifeline.fiftyFifty ? Classic5050 : Classic5050used
-                        }
-                        alt="50 50 lifeline"
-                        className="w-16"
-                      />
-                    </button>
+              <div className="w-28 md:w-72 flex items-center justify-center bg-[#020230]">
+             
+                <ul className="w-full lg:p-1 md:p-3 p-1 flex  justify-center flex-col">
+                  <div className="flex justify-around items-center my-4 gap-2 ">
+                    <div>
+                      <button className="lifeline" onClick={handle5050} disabled={timeOut}>
+                        <img src={!lifeline.fiftyFifty ? fifty: usedFifty} alt="50 50 lifeline" className="w-20" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handlePhone} disabled={timeOut}>
+                        <img src={!lifeline.phoneAFriend ? phone : usedPhone} alt="phone a friend" className="w-16" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handleATA} disabled={timeOut}>
+                        <img src={!lifeline.askAudience ? ATA : usedATA} alt="50 50 lifeline" className="w-16" />
+                      </button>
+                    </div>
                   </div>
+                  <div>
                   {moneyPyramid.map((moni, i) => (
                     <li
                       className={
@@ -265,6 +300,8 @@ const Home = () => {
                       </span>
                     </li>
                   ))}
+                  </div>
+
                 </ul>
               </div>
             </>
@@ -275,4 +312,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home; 

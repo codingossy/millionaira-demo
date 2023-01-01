@@ -43,7 +43,6 @@ const Trivia = ({
     return question[0]
 
   },[questionNumber])
-
   const Answers = useMemo(()=>{
     const answers = Question?.answers.sort(() => Math.random() - 0.5);
     if(lifeline.fiftyFifty && !usedLifeLines.fiftyFifty){
@@ -54,10 +53,12 @@ const Trivia = ({
 
      // generate random number to match index of all wrongAnswers
      const randomNumber = Math.floor(Math.random() * wrongAnswers.length);
-     
 
      // find the selected wrongAnswer with the gen. random number
      const selectedWrongAnswer = wrongAnswers[randomNumber];
+
+
+
 
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
       // if answer is correct or answer matches the 
@@ -78,6 +79,14 @@ const Trivia = ({
       })
       return lifeline_5050_answers
     }
+    if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
+      console.log(answers)
+      
+    }
+
+    // if(lifeline.askAudience && !usedLifeLines.askAudience){
+    //   console.log(answers)
+    // }
     return answers
   },[Question, lifeline])
 
@@ -104,6 +113,7 @@ const Trivia = ({
     setActiveButtons(false);
     setClassName("answer active");
 
+
     delay(3000, () => {
       setClassName(answer.correct ? "answer correct" : "answer wrong");
     });
@@ -121,13 +131,13 @@ const Trivia = ({
       } else {
         wrongAnswer();
         setActiveButtons(true)
+        
         delay(1000, () => {
           setTimeOut(true);
         });
       }
     });
   };
-
   return (
     <div className="h-full flex items-center flex-col justify-around -mt-10 md:-mt-0">
       <div className="w-[80%] text-center p-4 rounded-md border-4 capitalize border-white bg-[#020230] ">
@@ -140,9 +150,7 @@ const Trivia = ({
             key={index}
             disabled={!activeButtons}
             className={
-              selectedAnswer === answer
-                ? className 
-                : "answer capitalize"
+              selectedAnswer === answer ? className  : "answer capitalize" 
             }
           >
             {answer.text}
