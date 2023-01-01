@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
 
-import { selectUser } from "../store/userSlice";
+import userAuth from "../userAuth/userAuth";
 
 //import from firebase
 import { db } from "../firestore/firebaseConfig";
@@ -17,8 +17,9 @@ const Addusername = () => {
     const [username, setUsername] = useState("");
 
     //fetching the user details
-    const user = useSelector(selectUser);
-    let userId = user.uid;
+    const { currentUser } = userAuth();
+    let userId = currentUser.uid;
+
 
     let navigate = useNavigate();
 

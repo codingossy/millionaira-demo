@@ -56,7 +56,6 @@ const Register = () => {
           email: email,
           uid: userId
         }
-
         //storing the user's information in the users collectionn
         await setDoc(doc(db, 'users', userId), userInfo);
         dispatch(

@@ -4,7 +4,7 @@ import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { auth,db } from "../firestore/firebaseConfig";
-import { logout, selectUser } from "../store/userSlice";
+import { logout } from "../store/userSlice";
 import userAuth from "../userAuth/userAuth";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -13,14 +13,17 @@ import { toast } from 'react-toastify'
 
 
 const Login = () => {
-
+  //all the react useState
   const [username, setUsername] = useState("");
 
-  const user = useSelector(selectUser);
+  //all the react hooks
+  const { currentUser } = userAuth();
   const dispatch = useDispatch();
-  
-  let userId = user.uid;
   let navigate = useNavigate();
+
+  //setting the user uid
+  let userId = currentUser.uid;
+
 
   //getting the users info from the database
   useEffect(() => {
@@ -30,7 +33,6 @@ const Login = () => {
             const docSnap = await getDoc(docRef);
             
             if (docSnap.exists()) {
-
               setUsername(docSnap.data());
             } else {
               // doc.data() will be undefined in this case
@@ -38,7 +40,7 @@ const Login = () => {
             }
         }
     fetchItems();
-    }, []);
+    }, [userId]);
 
   // to sign out user
   const signUserOut = () => {
@@ -53,15 +55,13 @@ const Login = () => {
   };
 
 
-  // to handle profile
-  const { currentUser } = userAuth();
 
   return (
     <div className="  text-white bg-who h-screen w-full">
       <div className="mx-auto">
         <div className="px-6 py-6 w-full bg-primary flex items-center justify-between">
           <div className="text-xl font-semibold w-[80%]">
-            welcome <span className="text-green-600 font-bold">{username.username},</span>
+            welcome <span className="text-green-600 font-bold">{username.username || "user"},</span>
           </div>
           {/* added button to sign out */}
           <div>

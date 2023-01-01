@@ -13,8 +13,16 @@ import { selectUser } from "../../store/userSlice";
 
 import userAuth from "../../userAuth/userAuth";
 import {logout} from "../../store/userSlice";
-import Classic5050 from "../../assets/images/Classic5050.jpg";
-import Classic5050used from "../../assets/images/Classic5050used.jpg";
+
+import {
+    phone,
+    fifty,
+    usedPhone,
+    usedFifty,
+    ATA,
+    usedATA
+} from "../../assets/index"
+
 
 const initial_lifelines = {
   fiftyFifty: false,
@@ -24,9 +32,7 @@ const initial_lifelines = {
 
 const Home = () => {
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
 
-  let userId = user.uid;
 
 
   // to set the user
@@ -47,6 +53,11 @@ const Home = () => {
 
   const [lifeline, setLifeline] = useState(initial_lifelines)
 
+    //fetching the user details
+    const { currentUser } = userAuth();
+    let userId = currentUser.uid;
+
+
   useEffect(() => {
     const fetchItems = async () => {
       const docRef = doc(db, "users", userId);
@@ -55,11 +66,11 @@ const Home = () => {
               
         if (docSnap.exists()) {
           setUsernames(docSnap.data().username);
-          }
+        }
 
         }
     fetchItems();
-    }, []);
+    }, [userId]);
 
   const playAgain = () => {
     setQuestionNumber(1);
@@ -100,6 +111,28 @@ const Home = () => {
     }
 
   }
+  const handlePhone = () =>{
+    if(!lifeline.phoneAFriend){
+      setLifeline({
+        ...lifeline,
+        phoneAFriend: true
+      })
+    }else{
+      return null
+    }
+
+  }
+  const handleATA = () =>{
+    if(!lifeline.askAudience){
+      setLifeline({
+        ...lifeline,
+        askAudience: true
+      })
+    }else{
+      return null
+    }
+
+  }
 
   //   monney array
   const moneyPyramid = useMemo(
@@ -134,8 +167,8 @@ const Home = () => {
 
 
   
-  // to handle profile
-  const { currentUser } = userAuth();
+  // // to handle profile
+  // const { currentUser } = userAuth();
 
   useEffect(()=>{
     setUsername(currentUser.email)
@@ -225,12 +258,27 @@ const Home = () => {
               </div>
 
               {/* second */}
-              <div className="flex-initial w-24 md:w-72 flex items-center justify-center bg-[#020230]">
+              <div className="w-28 md:w-72 flex items-center justify-center bg-[#020230]">
              
-                <ul className="w-full p-1 md:p-3">
-                <button className="lifeline my-10" onClick={handle5050} disabled={timeOut}>
-                  <img src={!lifeline.fiftyFifty ? Classic5050: Classic5050used} alt="50 50 lifeline" className="w-16" />
-                </button>
+                <ul className="w-full lg:p-1 md:p-3 p-1 flex  justify-center flex-col">
+                  <div className="flex justify-around items-center my-4 gap-2 px-3">
+                    <div>
+                      <button className="lifeline" onClick={handle5050} disabled={timeOut}>
+                        <img src={!lifeline.fiftyFifty ? fifty: usedFifty} alt="50 50 lifeline" className="w-16" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handlePhone} disabled={timeOut}>
+                        <img src={!lifeline.phoneAFriend ? phone : usedPhone} alt="phone a friend" className="w-16" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handleATA} disabled={timeOut}>
+                        <img src={!lifeline.askAudience ? ATA : usedATA} alt="50 50 lifeline" className="w-16" />
+                      </button>
+                    </div>
+                  </div>
+                  <div>
                   {moneyPyramid.map((moni, i) => (
                     <li
                       className={
@@ -244,6 +292,8 @@ const Home = () => {
                       <span className="text-[12px] md:text-sm">{moni.amount}</span>
                     </li>
                   ))}
+                  </div>
+
                 </ul>
               </div>
             </>
@@ -254,4 +304,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home; 
