@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+// components
 import Timer from "../Timer/Timer";
 import Trivia from "../Trivia/Trivia";
 import { Questionnaire } from "../../data/QuestionsData";
@@ -6,13 +7,13 @@ import Winner from "../winner/Winner";
 import Start from "../Start/Start";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+// firebase
 import { db } from "../../firestore/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { selectUser } from "../../store/userSlice";
-
 import userAuth from "../../userAuth/userAuth";
 import {logout} from "../../store/userSlice";
+// images for lifeline
 
 import {
     phone,
@@ -28,17 +29,16 @@ const initial_lifelines = {
   fiftyFifty: false,
   phoneAFriend: false,
   askAudience: false,
-}
+};
 
 const Home = () => {
   const navigate = useNavigate();
 
-
-
   // to set the user
   const [username, setUsername] = useState(null);
-  const [usernames, setUsernames] = useState();
 
+  // to handle username from firebase auth
+  const [usernames, setUsernames] = useState();
 
   //   time out count bewtween answers
   const [timeOut, setTimeOut] = useState(false);
@@ -66,9 +66,9 @@ const Home = () => {
               
         if (docSnap.exists()) {
           setUsernames(docSnap.data().username);
-        }
+          }
 
-        }
+        };
     fetchItems();
     }, [userId]);
 
@@ -77,15 +77,15 @@ const Home = () => {
     setTimeOut(false);
     setEarned("₦ 0");
     setTimerRunning(true);
-    setLifeline(initial_lifelines)
+    setLifeline(initial_lifelines);
     // navigate('/')
   };
 
   const quitGame = () => {
     setTimerRunning(false);
     setTimeOut(true);
-    setLifeline(initial_lifelines)
-    logout()
+    setLifeline(initial_lifelines);
+    logout();
     navigate("/login");
   };
 
@@ -94,20 +94,20 @@ const Home = () => {
     setUsername(null);
     setQuestionNumber(1);
     setEarned("₦ 0");
-    setLifeline(initial_lifelines)
-    logout()
+    setLifeline(initial_lifelines);
+    logout();
     navigate("/");
   };
 
   //handle 50-50 lifeline
-  const handle5050 = () =>{
-    if(!lifeline.fiftyFifty){
+  const handle5050 = () => {
+    if (!lifeline.fiftyFifty) {
       setLifeline({
         ...lifeline,
-        fiftyFifty: true
-      })
-    }else{
-      return null
+        fiftyFifty: true,
+      });
+    } else {
+      return null;
     }
 
   }
@@ -170,9 +170,11 @@ const Home = () => {
   // // to handle profile
   // const { currentUser } = userAuth();
 
-  useEffect(()=>{
-    setUsername(currentUser.email)
-  },[currentUser])
+  useEffect(() => {
+    setUsername(currentUser.email);
+  }, [currentUser]);
+
+
 
 
   return (
@@ -186,6 +188,8 @@ const Home = () => {
           {/* if user wins the game */}
           {questionNumber > 15 ? (
             <Winner
+              setUsernames={setUsernames}
+              usernames={usernames}
               username={username}
               earned={earned}
               restartGame={playAgain}
@@ -200,8 +204,8 @@ const Home = () => {
                       {/* hello, <span className="text-white font-semibold">{currentUser.email}</span> */}
                     </p>
 
-                    <h1 className="text-center font-semibold text-2xl">
-                      Congratulations {usernames},<br /> You won {earned}
+                    <h1 className="text-center font-semibold text-xl md:text-2xl">
+                      Congratulations {usernames}, <br /> You won {earned}
                     </h1>
 
                     <div className="my-10">
@@ -288,8 +292,12 @@ const Home = () => {
                       }
                       key={i}
                     >
-                      <span className="w-32 font-semibold text-xs md:text-sm ">{moni.id}</span>
-                      <span className="text-[12px] md:text-sm">{moni.amount}</span>
+                      <span className="w-32 font-semibold text-xs md:text-sm ">
+                        {moni.id}
+                      </span>
+                      <span className="text-[12px] md:text-sm">
+                        {moni.amount}
+                      </span>
                     </li>
                   ))}
                   </div>

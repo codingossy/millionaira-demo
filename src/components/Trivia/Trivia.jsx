@@ -45,7 +45,6 @@ const Trivia = ({
   },[questionNumber])
   const Answers = useMemo(()=>{
     const answers = Question?.answers.sort(() => Math.random() - 0.5);
-    console.log(answers)
     if(lifeline.fiftyFifty && !usedLifeLines.fiftyFifty){
   
       // filter out all the wrong answers
@@ -57,6 +56,8 @@ const Trivia = ({
 
      // find the selected wrongAnswer with the gen. random number
      const selectedWrongAnswer = wrongAnswers[randomNumber];
+
+
 
 
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
