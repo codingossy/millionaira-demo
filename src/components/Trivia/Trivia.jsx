@@ -79,6 +79,14 @@ const Trivia = ({
       })
       return lifeline_5050_answers
     }
+    if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
+      console.log(answers)
+      
+    }
+
+    // if(lifeline.askAudience && !usedLifeLines.askAudience){
+    //   console.log(answers)
+    // }
     return answers
   },[Question, lifeline])
 

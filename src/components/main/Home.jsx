@@ -265,10 +265,10 @@ const Home = () => {
               <div className="w-28 md:w-72 flex items-center justify-center bg-[#020230]">
              
                 <ul className="w-full lg:p-1 md:p-3 p-1 flex  justify-center flex-col">
-                  <div className="flex justify-around items-center my-4 gap-2 px-3">
+                  <div className="flex justify-around items-center my-4 gap-2 ">
                     <div>
                       <button className="lifeline" onClick={handle5050} disabled={timeOut}>
-                        <img src={!lifeline.fiftyFifty ? fifty: usedFifty} alt="50 50 lifeline" className="w-16" />
+                        <img src={!lifeline.fiftyFifty ? fifty: usedFifty} alt="50 50 lifeline" className="w-20" />
                       </button>
                     </div>
                     <div>
