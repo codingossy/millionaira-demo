@@ -133,14 +133,6 @@ const Trivia = ({
 
         }
 
-      setUsedLifelines({
-        ...usedLifeLines,
-        fiftyFifty : true,
-        phoneAFriend : true
-      })
-      
-
-
 
     }
 
