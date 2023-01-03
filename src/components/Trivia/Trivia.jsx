@@ -115,6 +115,7 @@ const Trivia = ({
     }
 
     if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
+
         if(phoneTimeOut == true){
           setShowModal(false)
          setTimerRunning(true)
@@ -122,15 +123,24 @@ const Trivia = ({
         }else{
           setShowModal(true)
           setTimerRunning(false)
+
+        setCurrentQuestion(Question.question)
+
+        let options = ["a", "b", "c", "d"]
+        const randomOption = Math.floor(Math.random() * options.length);
+
+        setGuessedAnswer(options[randomOption])
+
         }
+
+      setUsedLifelines({
+        ...usedLifeLines,
+        fiftyFifty : true,
+        phoneAFriend : true
+      })
       
 
-      setCurrentQuestion(Question.question)
 
-      let options = ["a", "b", "c", "d"]
-      const randomOption = Math.floor(Math.random() * options.length);
-
-      setGuessedAnswer(options[randomOption])
 
     }
 
