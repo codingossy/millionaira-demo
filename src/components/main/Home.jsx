@@ -255,8 +255,10 @@ const Home = () => {
                         setTimeOut={setTimeOut}
                         setTimerRunning={setTimerRunning}
                         lifeline={lifeline}
+                        timerRunning={timerRunning}
                       />
                     </div>
+                    
                   </>
                 )}
               </div>
@@ -313,3 +315,13 @@ const Home = () => {
 };
 
 export default Home; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
