@@ -1,16 +1,45 @@
 import React, { useEffect, useMemo, useState } from "react";
+// components
 import Timer from "../Timer/Timer";
 import Trivia from "../Trivia/Trivia";
 import { Questionnaire } from "../../data/QuestionsData";
 import Winner from "../winner/Winner";
 import Start from "../Start/Start";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+// firebase
+import { db } from "../../firestore/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { selectUser } from "../../store/userSlice";
 import userAuth from "../../userAuth/userAuth";
+import {logout} from "../../store/userSlice";
+// images for lifeline
+
+import {
+    phone,
+    fifty,
+    usedPhone,
+    usedFifty,
+    ATA,
+    usedATA
+} from "../../assets/index"
+
+
+const initial_lifelines = {
+  fiftyFifty: false,
+  phoneAFriend: false,
+  askAudience: false,
+};
 
 const Home = () => {
   const navigate = useNavigate();
+
   // to set the user
   const [username, setUsername] = useState(null);
+
+  // to handle username from firebase auth
+  const [usernames, setUsernames] = useState();
+
   //   time out count bewtween answers
   const [timeOut, setTimeOut] = useState(false);
 
@@ -19,20 +48,49 @@ const Home = () => {
 
   //   detemine the amount earned
   const [earned, setEarned] = useState("₦ 0");
+
+
   // for the countdown
   const [timerRunning, setTimerRunning] = useState(true);
+
+  const [lifeline, setLifeline] = useState(initial_lifelines)
+
+    //   time out count bewtween answers
+    const [phoneTimeOut, setPhoneTimeOut] = useState(false);
+
+    //fetching the user details
+    const { currentUser } = userAuth();
+    let userId = currentUser.uid;
+
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const docRef = doc(db, "users", userId);
+
+      const docSnap = await getDoc(docRef);
+              
+        if (docSnap.exists()) {
+          setUsernames(docSnap.data().username);
+          }
+
+        };
+    fetchItems();
+    }, [userId]);
 
   const playAgain = () => {
     setQuestionNumber(1);
     setTimeOut(false);
     setEarned("₦ 0");
     setTimerRunning(true);
+    setLifeline(initial_lifelines);
     // navigate('/')
   };
 
   const quitGame = () => {
     setTimerRunning(false);
     setTimeOut(true);
+    setLifeline(initial_lifelines);
+    logout();
     navigate("/login");
   };
 
@@ -41,8 +99,50 @@ const Home = () => {
     setUsername(null);
     setQuestionNumber(1);
     setEarned("₦ 0");
-    navigate("/login");
+    setLifeline(initial_lifelines);
+    logout();
+    navigate("/");
   };
+
+  //handle 50-50 lifeline
+  const handle5050 = () => {
+    if (!lifeline.fiftyFifty) {
+      setLifeline({
+        ...lifeline,
+        fiftyFifty: true,
+      });
+    } else {
+      return null;
+    }
+  }
+
+
+  const handlePhone = () =>{
+    if(!lifeline.phoneAFriend){
+      setPhoneTimeOut(false);
+      setTimerRunning(false);
+
+      setLifeline({
+        ...lifeline,
+        phoneAFriend: true
+      })
+    }else{
+      return null
+    }
+  }
+
+
+  const handleATA = () =>{
+    if(!lifeline.askAudience){
+      setLifeline({
+        ...lifeline,
+        askAudience: true
+      })
+    }else{
+      return null
+    }
+
+  }
 
   //   monney array
   const moneyPyramid = useMemo(
@@ -77,21 +177,29 @@ const Home = () => {
 
 
   
-  // to handle profile
-  const { currentUser } = userAuth();
+  // // to handle profile
+  // const { currentUser } = userAuth();
+
+  useEffect(() => {
+    setUsername(currentUser.email);
+  }, [currentUser]);
+
+
 
 
   return (
     <section className="w-full flex h-screen text-white">
       {/* start game if user is logged in */}
 
-      {username ? (
+      {!username ? (
         <Start setUsername={setUsername} />
       ) : (
         <>
           {/* if user wins the game */}
           {questionNumber > 15 ? (
             <Winner
+              setUsernames={setUsernames}
+              usernames={usernames}
               username={username}
               earned={earned}
               restartGame={playAgain}
@@ -106,8 +214,8 @@ const Home = () => {
                       {/* hello, <span className="text-white font-semibold">{currentUser.email}</span> */}
                     </p>
 
-                    <h1 className="text-center font-semibold text-2xl">
-                      Congratulations, You won {earned}
+                    <h1 className="text-center font-semibold text-xl md:text-2xl">
+                      Congratulations {usernames}, <br /> You won {earned}
                     </h1>
 
                     <div className="my-10">
@@ -155,16 +263,40 @@ const Home = () => {
                         questionNumber={questionNumber}
                         setQuestionNumber={setQuestionNumber}
                         setTimeOut={setTimeOut}
+                        setPhoneTimeOut={setPhoneTimeOut}
+                        phoneTimeOut={phoneTimeOut}
                         setTimerRunning={setTimerRunning}
+                        lifeline={lifeline}
+                        timerRunning={timerRunning}
                       />
                     </div>
+                    
                   </>
                 )}
               </div>
 
               {/* second */}
-              <div className="flex-initial w-24 md:w-72 flex items-center justify-center bg-[#020230]">
-                <ul className="w-full p-1 md:p-3">
+              <div className="w-28 md:w-72 flex items-center justify-center bg-[#020230]">
+             
+                <ul className="w-full lg:p-1 md:p-3 p-1 flex  justify-center flex-col">
+                  <div className="flex justify-around items-center my-4 gap-2 ">
+                    <div>
+                      <button className="lifeline" onClick={handle5050} disabled={timeOut}>
+                        <img src={!lifeline.fiftyFifty ? fifty: usedFifty} alt="50 50 lifeline" className="w-20" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handlePhone} disabled={timeOut}>
+                        <img src={!lifeline.phoneAFriend ? phone : usedPhone} alt="phone a friend" className="w-16" />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="lifeline " onClick={handleATA} disabled={timeOut}>
+                        <img src={!lifeline.askAudience ? ATA : usedATA} alt="50 50 lifeline" className="w-16" />
+                      </button>
+                    </div>
+                  </div>
+                  <div>
                   {moneyPyramid.map((moni, i) => (
                     <li
                       className={
@@ -174,10 +306,16 @@ const Home = () => {
                       }
                       key={i}
                     >
-                      <span className="w-32 font-semibold text-xs md:text-sm ">{moni.id}</span>
-                      <span className="text-[12px] md:text-sm">{moni.amount}</span>
+                      <span className="w-32 font-semibold text-xs md:text-sm ">
+                        {moni.id}
+                      </span>
+                      <span className="text-[12px] md:text-sm">
+                        {moni.amount}
+                      </span>
                     </li>
                   ))}
+                  </div>
+
                 </ul>
               </div>
             </>
@@ -188,4 +326,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home; 

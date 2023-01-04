@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-const Timer = ({
-  setTimeOut,
+const PhoneTimer = ({
+  setPhoneTimeOut,
   questionNumber,
-  timerRunning,
-  setTimerRunning,
+  phoneTimerRunning,
 }) => {
   // starting at 15 so it counts down
-  const [timer, setTimer] = useState(15);
+  const [phoneTimer, setPhoneTimer] = useState(15);
 
   useEffect(() => {
-    if (timer === 0) return setTimeOut(true);
+    if (phoneTimer === 0) return setPhoneTimeOut(true);
 
-    if (timerRunning) {
+    if (phoneTimerRunning) {
       const interval = setInterval(() => {
-        setTimer((previous) => previous - 1);
+        setPhoneTimer((previous) => previous - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -22,13 +21,13 @@ const Timer = ({
     // return () => clearInterval(interval);
 
     // set timer and settimeout as deps so they run jus once
-  }, [timer, setTimeOut, timerRunning]);
+  }, [phoneTimer, setPhoneTimeOut]);
 
   useEffect(() => {
-    setTimer(15);
+    setPhoneTimer(15);
   }, [questionNumber]);
 
-  return timer;
+  return phoneTimer;
 };
 
-export default Timer;
+export default PhoneTimer;

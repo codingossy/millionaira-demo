@@ -1,12 +1,31 @@
-import React from "react";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import img1 from "../../assets/images/animated-balloon-image-0002.gif";
+import { db } from "../../firestore/firebaseConfig";
 
-const Winner = ({ username, earned, restartGame }) => {
+const Winner = ({ username, earned, restartGame, setUsernames, usernames }) => {
+
+  
+  useEffect(() => {
+    const fetchItems = async () => {
+      const docRef = doc(db, "users", userId);
+
+      const docSnap = await getDoc(docRef);
+              
+        if (docSnap.exists()) {
+          setUsernames(docSnap.data().username);
+          }
+
+        }
+    fetchItems();
+    }, []);
+
+
   return (
     <div className="w-full h-full relative">
-      <div className="container mx-auto flex flex-col items-center justify-center text-white my-20">
-        <h1 className="my-5">congratulations {username}</h1>
+      <div className="container mx-auto flex flex-col items-center text-center justify-center text-white my-20">
+        <h1 className="my-5">congratulations padi mi <span className="text-red-600 text-xl font-semibold">{usernames}</span></h1>
         <p className="text-2xl capitalize">
           you just won yourself{" "}
           <span className="text-green-700 font-semibold">{earned}</span>
