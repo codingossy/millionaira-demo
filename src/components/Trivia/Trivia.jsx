@@ -25,6 +25,8 @@ const Trivia = ({
   setQuestionNumber,
   setTimeOut,
   lifeline,
+  phoneTimeOut,
+  setPhoneTimeOut
 }) => {
   // const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -46,8 +48,10 @@ const Trivia = ({
 
     // for the countdown
   const [phoneTimerRunning, setPhoneTimerRunning] = useState(true);
-  //   time out count bewtween answers
-  const [phoneTimeOut, setPhoneTimeOut] = useState(false);
+
+
+  // //   time out count bewtween answers
+  // const [phoneTimeOut, setPhoneTimeOut] = useState(false);
 
   useEffect(() => {
       let timeOut = setTimeout(() => {
@@ -81,16 +85,19 @@ const Trivia = ({
 
   const Answers = useMemo(()=>{
     const answers = Question?.answers.sort(() => Math.random() - 0.5);
+
+
+
     if(lifeline.fiftyFifty && !usedLifeLines.fiftyFifty){
   
       // filter out all the wrong answers
      const wrongAnswers = answers.filter(answer=> !answer.correct);
     
      // generate random number to match index of all wrongAnswers
-     const randomNumber = Math.floor(Math.random() * wrongAnswers.length);
+     const randomNumber = () => Math.floor(Math.random() * wrongAnswers.length);
 
      // find the selected wrongAnswer with the gen. random number
-     const selectedWrongAnswer = wrongAnswers[randomNumber];
+     const selectedWrongAnswer = wrongAnswers[randomNumber()];
 
 
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
@@ -118,13 +125,10 @@ const Trivia = ({
 
 
     if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
-      if(phoneTimeOut == true){
-        setShowModal(false)
-       setTimerRunning(true)
-  
-      }else{
-        setShowModal(true)
-        setTimerRunning(false)
+      setUsedLifelines({
+        ...usedLifeLines,
+        phoneAFriend : true
+      })
 
       
 
@@ -143,41 +147,31 @@ const Trivia = ({
       const randomOption = Math.floor(Math.random() * options.length);
 
       setGuessedAnswer(options[randomOption])
-
-      }
-
-      setUsedLifelines({
-        ...usedLifeLines,
-        phoneAFriend : true
-      })
-
       return filteredAnswers;
-
-    }else{
-    return answers;
     }
+    
+    setFilteredAnswers(answers)
+    return answers;
+    
 
    
   },[Question, lifeline.phoneAFriend, lifeline.fiftyFifty, phoneTimeOut])
 
 
-
+  useEffect(()=>{
+    if(!timerRunning && !phoneTimeOut){
+      setShowModal(true)
+    }else if(phoneTimeOut){
+      setTimerRunning(true)
+      setShowModal(false)
+    }
+  }, [phoneTimeOut,timerRunning])
 
   // to run the play
   useEffect(() => {
     letsPlay();
   }, [letsPlay]);
 
-  // useEffect(()=>{
-  //   const answers = Question?.answers.sort(() => Math.random() - 0.5);
-  //   setFilteredAnswers(answers);
-  // },[])
-
-  //      fetching the questions data
-  // useEffect(() => {
-  //   const randomNumber = Math.floor(Math.random() * data.length);
-  //   setQuestion(data[randomNumber]);
-  // }, [data, questionNumber]);
 
   const delay = (duration, callback) => {
     setTimeout(() => {
@@ -216,7 +210,6 @@ const Trivia = ({
       }
     });
   };
-
   const favour = () => {
     setFriends(false)
     setSelectedFriend("Favour")
@@ -334,16 +327,4 @@ const Trivia = ({
   );
 };
 
-export default Trivia;
-
- 
- 
- 
-
- 
-  
-   
-                                  
-                                   
-                                    
-                                     
+export default Trivia;                       
