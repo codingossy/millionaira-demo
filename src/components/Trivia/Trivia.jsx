@@ -39,10 +39,10 @@ const Trivia = ({
   const [friends, setFriends] = useState(true)
   const [calling, setCalling] = useState(true)
   const [loading, setLoading] = useState(true)
-  const [currentQuestion, setCurrentQuestion] = useState('')
   const [guessedAnswer, setGuessedAnswer] = useState("")
   const [selectedFriend, setSelectedFriend] = useState("")
   const [selectedAvatar, setSelectedAvatar] = useState("")
+  const [filteredAnswers, setFilteredAnswers] = useState()
 
     // for the countdown
   const [phoneTimerRunning, setPhoneTimerRunning] = useState(true);
@@ -77,6 +77,8 @@ const Trivia = ({
     return question[0]
 
   },[questionNumber])
+
+
   const Answers = useMemo(()=>{
     const answers = Question?.answers.sort(() => Math.random() - 0.5);
     if(lifeline.fiftyFifty && !usedLifeLines.fiftyFifty){
@@ -84,14 +86,11 @@ const Trivia = ({
       // filter out all the wrong answers
      const wrongAnswers = answers.filter(answer=> !answer.correct);
     
-
      // generate random number to match index of all wrongAnswers
      const randomNumber = Math.floor(Math.random() * wrongAnswers.length);
 
      // find the selected wrongAnswer with the gen. random number
      const selectedWrongAnswer = wrongAnswers[randomNumber];
-
-
 
 
      const lifeline_5050_answers = answers.map((answer, index, arr)=>{
@@ -102,51 +101,77 @@ const Trivia = ({
           return answer
         }else{
           return {
-            text: ' ',
+            text: null,
             correct: false,
           }
         }
       })
+
       setUsedLifelines({
         ...usedLifeLines,
         fiftyFifty : true
       })
+
+      setFilteredAnswers(lifeline_5050_answers)
       return lifeline_5050_answers
     }
 
+
     if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
+      if(phoneTimeOut == true){
+        setShowModal(false)
+       setTimerRunning(true)
+  
+      }else{
+        setShowModal(true)
+        setTimerRunning(false)
 
-        if(phoneTimeOut == true){
-          setShowModal(false)
-         setTimerRunning(true)
-    
+      
+
+      let options = lifeline.fiftyFifty ? filteredAnswers.map((answer, index)=>{
+        // check if this is a filtered answer and map the index of the filtered
+        // answers to a, b, c, d options
+        if(answer.text){
+         return index === 0 ? 'a' :  index === 1 ? 'b' : index === 2 ? 'c' : 'd'
         }else{
-          setShowModal(true)
-          setTimerRunning(false)
-
-        setCurrentQuestion(Question.question)
-
-        let options = ["a", "b", "c", "d"]
-        const randomOption = Math.floor(Math.random() * options.length);
-
-        setGuessedAnswer(options[randomOption])
-
+          return null
         }
+      }).filter(v => v!==null)
+      :  ["a", "b", "c", "d"]
+     
 
+      const randomOption = Math.floor(Math.random() * options.length);
 
+      setGuessedAnswer(options[randomOption])
+
+      }
+
+      setUsedLifelines({
+        ...usedLifeLines,
+        phoneAFriend : true
+      })
+
+      return filteredAnswers;
+
+    }else{
+    return answers;
     }
 
-    // if(lifeline.askAudience && !usedLifeLines.askAudience){
-    //   console.log(answers)
-    // }
+   
+  },[Question, lifeline.phoneAFriend, lifeline.fiftyFifty, phoneTimeOut])
 
-    return answers
-  },[Question, lifeline, phoneTimeOut])
+
+
 
   // to run the play
   useEffect(() => {
     letsPlay();
   }, [letsPlay]);
+
+  // useEffect(()=>{
+  //   const answers = Question?.answers.sort(() => Math.random() - 0.5);
+  //   setFilteredAnswers(answers);
+  // },[])
 
   //      fetching the questions data
   // useEffect(() => {
@@ -265,7 +290,7 @@ const Trivia = ({
                                   <div>
                                     <img src={frankImg} alt="" className="rounded-full w-[4rem]"/>
                                   </div>
-                                  <div>Hello {selectedFriend} please what is the answer to {currentQuestion}</div>
+                                  <div>Hello {selectedFriend} please what is the answer to {Question.question}</div>
                                   </div>
                                   <div>{loading ? (
                                     <div>...</div>
@@ -310,15 +335,5 @@ const Trivia = ({
 };
 
 export default Trivia;
-
- 
- 
- 
-
- 
-  
-   
-                                  
-                                   
                                     
                                      
