@@ -28,6 +28,7 @@ const Trivia = ({
   phoneTimeOut,
   setPhoneTimeOut
 }) => {
+  // all the react state
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [className, setClassName] = useState("answer");
   const [letsPlay] = useSound(play);
@@ -118,6 +119,7 @@ const Trivia = ({
       return lifeline_5050_answers
     }
 
+    //lifeline for phone a friend
 
     if(lifeline.phoneAFriend && !usedLifeLines.phoneAFriend){
       setUsedLifelines({
@@ -125,6 +127,7 @@ const Trivia = ({
         phoneAFriend : true
       })
 
+      
 
       let options = lifeline.fiftyFifty ? filteredAnswers.map((answer, index)=>{
         // check if this is a filtered answer and map the index of the filtered
@@ -137,19 +140,22 @@ const Trivia = ({
       }).filter(v => v!==null)
       :  ["a", "b", "c", "d"]
      
-
+      //getting random options
       const randomOption = Math.floor(Math.random() * options.length);
 
+      //setting the options to  the guessed answer
       setGuessedAnswer(options[randomOption])
       return filteredAnswers;
     }
     
+    // setting filtered to the initial answer
     setFilteredAnswers(answers)
     return answers;
 
   },[Question, lifeline.phoneAFriend, lifeline.fiftyFifty])
 
 
+  //conditions to set the Modals
   useEffect(()=>{
     if(!timerRunning && !phoneTimeOut){
       setShowModal(true)
@@ -171,6 +177,7 @@ const Trivia = ({
     }, duration);
   };
 
+  //function for selected option
   const handleClick = (answer) => {
     setTimerRunning(false);
     setSelectedAnswer(answer);
@@ -182,8 +189,10 @@ const Trivia = ({
       setClassName(answer.correct ? "answer correct" : "answer wrong");
     });
 
+    //condition to check if answer is correct 
 
     delay(5000, () => {
+      //if the answer is correct move to the next question
       if (answer.correct) {
         correctAnswer();
         delay(1000, () => {
@@ -192,7 +201,9 @@ const Trivia = ({
           setTimerRunning(true);
           setActiveButtons(true)
         });
-      } else {
+      }
+      //if the answer is wrong end the game 
+      else {
         wrongAnswer();
         setActiveButtons(true)
         
@@ -202,9 +213,11 @@ const Trivia = ({
       }
     });
   };
-  const favour = () => {
+
+  // functions to select  friends
+  const Ifechi = () => {
     setFriends(false)
-    setSelectedFriend("Favour")
+    setSelectedFriend("Ifechi")
     setSelectedAvatar("favourImg")
   }
   const phantom = () => {
@@ -243,11 +256,11 @@ const Trivia = ({
                         
                         {friends ? (
                           <>
-                            <div className="p-3 rounded-lg cursor-pointer bg-[#222] flex items-center justify-start flex-row gap-2" onClick={favour}>
+                            <div className="p-3 rounded-lg cursor-pointer bg-[#222] flex items-center justify-start flex-row gap-2" onClick={Ifechi}>
                               <div>
                                 <img src={favourImg || "https://res.cloudinary.com/phantom1245/image/upload/v1672750801/favour_irgcbi.png"} alt="" className="rounded-full w-[4rem]"/>
                               </div>
-                              <div className="font-bold">Favour</div>
+                              <div className="font-bold">Ifechi</div>
                             </div>
                             <div className="p-3 rounded-lg cursor-pointer bg-[#222] flex items-center justify-start flex-row gap-2" onClick={phantom}>
                               <div>

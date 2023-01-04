@@ -9,6 +9,7 @@ const PhoneTimer = ({
   const [phoneTimer, setPhoneTimer] = useState(15);
 
   useEffect(() => {
+    
     if (phoneTimer === 0) return setPhoneTimeOut(true);
 
     if (phoneTimerRunning) {
@@ -17,8 +18,6 @@ const PhoneTimer = ({
       }, 1000);
       return () => clearInterval(interval);
     }
-
-    // return () => clearInterval(interval);
 
     // set timer and settimeout as deps so they run jus once
   }, [phoneTimer, setPhoneTimeOut]);
