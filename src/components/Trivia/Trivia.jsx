@@ -130,7 +130,6 @@ const Trivia = ({
         phoneAFriend : true
       })
 
-      
 
       let options = lifeline.fiftyFifty ? filteredAnswers.map((answer, index)=>{
         // check if this is a filtered answer and map the index of the filtered
@@ -152,10 +151,8 @@ const Trivia = ({
     
     setFilteredAnswers(answers)
     return answers;
-    
 
-   
-  },[Question, lifeline.phoneAFriend, lifeline.fiftyFifty, phoneTimeOut])
+  },[Question, lifeline.phoneAFriend, lifeline.fiftyFifty])
 
 
   useEffect(()=>{
