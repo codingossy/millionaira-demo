@@ -48,10 +48,15 @@ const Home = () => {
 
   //   detemine the amount earned
   const [earned, setEarned] = useState("₦ 0");
+
+
   // for the countdown
   const [timerRunning, setTimerRunning] = useState(true);
 
   const [lifeline, setLifeline] = useState(initial_lifelines)
+
+    //   time out count bewtween answers
+    const [phoneTimeOut, setPhoneTimeOut] = useState(false);
 
     //fetching the user details
     const { currentUser } = userAuth();
@@ -109,10 +114,14 @@ const Home = () => {
     } else {
       return null;
     }
-
   }
+
+
   const handlePhone = () =>{
     if(!lifeline.phoneAFriend){
+      setPhoneTimeOut(false);
+      setTimerRunning(false);
+
       setLifeline({
         ...lifeline,
         phoneAFriend: true
@@ -120,8 +129,9 @@ const Home = () => {
     }else{
       return null
     }
-
   }
+
+
   const handleATA = () =>{
     if(!lifeline.askAudience){
       setLifeline({
@@ -253,10 +263,14 @@ const Home = () => {
                         questionNumber={questionNumber}
                         setQuestionNumber={setQuestionNumber}
                         setTimeOut={setTimeOut}
+                        setPhoneTimeOut={setPhoneTimeOut}
+                        phoneTimeOut={phoneTimeOut}
                         setTimerRunning={setTimerRunning}
                         lifeline={lifeline}
+                        timerRunning={timerRunning}
                       />
                     </div>
+                    
                   </>
                 )}
               </div>

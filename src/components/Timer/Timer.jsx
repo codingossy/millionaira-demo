@@ -22,7 +22,7 @@ const Timer = ({
     // return () => clearInterval(interval);
 
     // set timer and settimeout as deps so they run jus once
-  }, [timer, setTimeOut]);
+  }, [timer, setTimeOut, timerRunning]);
 
   useEffect(() => {
     setTimer(15);

@@ -303,7 +303,7 @@ export const Questionnaire = [
       },
       {
         text: "washington",
-        correct: true,
+        correct: false,
       },
       {
         text: "chicago",
