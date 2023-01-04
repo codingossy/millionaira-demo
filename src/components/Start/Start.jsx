@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/1672386690099.jpg";
 
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,9 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firestore/firebaseConfig";
 import { login } from "../../store/userSlice";
-
-import { toast } from 'react-toastify'
-
 
 const Start = () => {
   const [email, setEmail] = useState("");
@@ -27,7 +24,6 @@ const Start = () => {
         email,
         password
       ).then((user) => {
-       
         dispatch(
           login({
             email: user.user.email,
@@ -97,7 +93,7 @@ const Start = () => {
           <div className="my-3 w-full text-center">
             <button
               className="w-full rounded-2xl bg-blue-600 p-1 uppercase text-white transition-all duration-300 ease-in-out hover:bg-blue-400"
-              // No need for onclick here as it prevents form validation
+              // No nned for onclick here as it prevents form validation
               // onClick={loginAuth}
               type="submit"
             >

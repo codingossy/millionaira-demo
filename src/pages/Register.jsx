@@ -1,90 +1,43 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { login } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 
-//firebase import
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firestore/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "../firestore/firebaseConfig";
+import { login } from "../store/userSlice";
 
-import logo from "../assets/images/logo.png";
 
-import { toast } from 'react-toastify'
-
+import logo from "../assets/images/1672386690099.jpg";
 
 const Register = () => {
-
-  //setting the state of the form
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-    //function to validate form
-    const validateForm = () => {
-        let isValid = true
-        
-        //if the input field is empty: this trows an error
-        if (username == '' || email == '' || password == '' ) {
-            isValid = false
-            toast.error('invalid credential')
-        }
-
-        return isValid
-    }
   const signupAuth = async (e) => {
     e.preventDefault();
-      //checking if the form is validated
-    if (validateForm()) {
+
     try {
       const userDetails = await createUserWithEmailAndPassword(
         auth,
         email,
         password
-      ).then(async(user) => {
-        
-        //getting the user uid
-        let userId = user.user.uid;
-
-        //storing the user's information in an object
-        let userInfo = {
-          username: username,
-          email: email,
-          uid: userId
-        }
-        //storing the user's information in the users collectionn
-        await setDoc(doc(db, 'users', userId), userInfo);
+      ).then((user) => {
         dispatch(
           login({
             email: user.user.email,
             uid: user.user.uid,
-            username: user.user.username,
+            displayName: user.user.displayName,
           })
-        );  
-
-
-
-        
-
+        );
       });
 
       navigate("/login");
 
       // const user = userDetails.user
-    } catch (err) {
-  
-       if(err.message == "Firebase: Error (auth/email-already-in-use)."){
-         toast.error("email already exist") 
-      }
-      else if (err.message == "Firebase: Password should be at least 6 characters (auth/weak-password).") {
-        toast.error("your password is too short please retry")
-        }
-    }
-  }
+    } catch (error) {}
   };
 
   return (
@@ -102,18 +55,6 @@ const Register = () => {
             action=""
             className="my-5 flex w-full flex-col capitalize md:w-[70%]"
           >
-            {/* added an input for username */}
-            <div className="my-2 flex flex-col gap-y-1">
-              <label htmlFor="">username</label>
-              <input
-                className="rounded-2xl bg-blue-300 p-1 px-2 font-medium text-black outline-none transition duration-300 ease-in-out focus:border-blue-800"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            
             <div className="my-2 flex flex-col gap-y-1">
               <label htmlFor="">email Address</label>
               <input
