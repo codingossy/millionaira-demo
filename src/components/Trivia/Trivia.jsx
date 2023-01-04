@@ -28,7 +28,6 @@ const Trivia = ({
   phoneTimeOut,
   setPhoneTimeOut
 }) => {
-  // const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [className, setClassName] = useState("answer");
   const [letsPlay] = useSound(play);
@@ -49,9 +48,6 @@ const Trivia = ({
     // for the countdown
   const [phoneTimerRunning, setPhoneTimerRunning] = useState(true);
 
-
-  // //   time out count bewtween answers
-  // const [phoneTimeOut, setPhoneTimeOut] = useState(false);
 
   useEffect(() => {
       let timeOut = setTimeout(() => {
@@ -94,24 +90,23 @@ const Trivia = ({
      const wrongAnswers = answers.filter(answer=> !answer.correct);
     
      // generate random number to match index of all wrongAnswers
-     const randomNumber = () => Math.floor(Math.random() * wrongAnswers.length);
+     const randomNumber =  Math.floor(Math.random() * wrongAnswers.length);
 
      // find the selected wrongAnswer with the gen. random number
-     const selectedWrongAnswer = wrongAnswers[randomNumber()];
+     const selectedWrongAnswer = wrongAnswers[randomNumber];
 
 
-     const lifeline_5050_answers = answers.map((answer, index, arr)=>{
+     const lifeline_5050_answers = answers.map((answer)=>{
       // if answer is correct or answer matches the 
       // random number selected wrong answer, return that answer
       // otherwise, return answer with empty text
-        if(answer.correct || (answer.text == selectedWrongAnswer.text)){
-          return answer
-        }else{
-          return {
-            text: null,
-            correct: false,
-          }
-        }
+      return answer.correct ? answer 
+      : answer.text == selectedWrongAnswer.text ? answer 
+      : 
+      {
+        text: null,
+        correct: false,
+      }
       })
 
       setUsedLifelines({
