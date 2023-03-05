@@ -34,7 +34,7 @@ module.exports = {
         newsletter: 'url("./images/newsletter.png")',
       },
       dropShadow: {
-        primary: '0px 4px 10px rgba(15, 27, 51, 0.05);',
+        primary: '0px 4px 10px rgba(15, 27, 51, 0.05)',
       },
     },
   },
